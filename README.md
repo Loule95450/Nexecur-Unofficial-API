@@ -1,8 +1,8 @@
 # Nexecur Unofficial API
 
-![GitHub release](https://img.shields.io/github/release/baudev/Nexecur-Unofficial-API.svg)
-![GitHub repo size in bytes](https://img.shields.io/github/repo-size/baudev/Nexecur-Unofficial-API.svg)
-![GitHub](https://img.shields.io/github/license/baudev/Nexecur-Unofficial-API.svg)
+![GitHub release](https://img.shields.io/github/release/Loule95450/Nexecur-Unofficial-API.svg)
+![GitHub repo size in bytes](https://img.shields.io/github/repo-size/Loule95450/Nexecur-Unofficial-API.svg)
+![GitHub](https://img.shields.io/github/license/Loule95450/Nexecur-Unofficial-API.svg)
 
 This is an Unofficial API of the Nexecur system. 
 
