@@ -4,11 +4,11 @@
 ![GitHub repo size in bytes](https://img.shields.io/github/repo-size/Loule95450/Nexecur-Unofficial-API.svg)
 ![GitHub](https://img.shields.io/github/license/Loule95450/Nexecur-Unofficial-API.svg)
 
-This is an Unofficial API of the Nexecur system. 
+This is an unofficial API for the Nexecur system, forked from a deleted repository originally created by Baudev. This fork is maintained by Loule95450.
 
 ## Installation
 
-1. `git clone https://github.com/baudev/Nexecur-Unofficial-API.git`
+1. `git clone https://github.com/Loule95450/Nexecur-Unofficial-API.git`
 2. `npm install`
 3. Configure the `config.json` file. You should provide the following values:
 - `id_site` (also called wiring code)
@@ -55,7 +55,7 @@ NexecurAPI.enableAlarm().then(() => {
 
 MIT License
 
-Copyright (c) 2018 Baudev, Quelqundev.
+Copyright (c) 2018 Baudev, Quelqundev, Loule95450.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
