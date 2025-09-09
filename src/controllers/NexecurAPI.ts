@@ -178,7 +178,7 @@ export class NexecurAPI {
     }
 
     /**
-     * Enables the alarm system (defaults to total alarm for backward compatibility)
+     * Enables the alarm system (defaults to partial alarm)
      * @deprecated Use enablePartialAlarm() or enableTotalAlarm() for explicit control
      * @returns Promise that resolves when alarm is enabled
      */

@@ -271,7 +271,7 @@ describe('NexecurAPI', () => {
                 expect.fail('Should have thrown OrderAlarmError');
             } catch (error) {
                 expect(error).to.be.instanceOf(OrderAlarmError);
-                expect(error.message).to.include('enabling total alarm');
+                expect(error.message).to.include('enabling partial alarm');
             } finally {
                 RequestService.controlPanelStatus = originalControl;
             }
