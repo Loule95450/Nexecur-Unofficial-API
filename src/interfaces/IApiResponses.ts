@@ -26,12 +26,90 @@ export interface ISaltResponse extends IApiResponse {
 export interface ISiteResponse extends IApiResponse {
     /** Authentication token */
     token: string;
-    
+
+    /** Site identifier */
+    id_site?: number;
+
+    /** Site type (eg. "centrale_w") */
+    type?: string;
+
+    /** Ecosystem name */
+    ecosystem?: string;
+
+    /** Streaming enabled on panel (1/0) */
+    panel_streaming?: number;
+
+    /** Panel serial number */
+    panel_serial?: string;
+
     /** Current alarm panel status */
-    panel_status: number;
-    
+    panel_status?: number;
+
+    /** Panel service/partition flags */
+    panel_sp1?: number;
+    panel_sp2?: number;
+    panel_sp1_nom?: string;
+    panel_sp2_nom?: string;
+
+    /** List of service identifiers enabled for the site */
+    services?: number[];
+
+    /** Registered devices (sensors, zones, etc.) */
+    devices?: IDevice[];
+
+    /** Registered badges/users */
+    badges?: IBadge[];
+
     /** Event history data */
-    evenements: any[];
+    evenements?: IEvenement[];
+
+    /** Locks (serrures) */
+    serrures?: any[];
+
+    /** Camera / streaming related fields */
+    camera_token?: string;
+    camera_available?: number;
+
+    /** Various availability flags */
+    panel_available?: number;
+    streaming_available?: number;
+    serrures_available?: number;
+    looky_available?: number;
+
+    /** Cameras and shares */
+    cameras?: any[];
+    partages?: any[];
+}
+
+/** Device / zone information returned by the site API */
+export interface IDevice {
+    serial?: string;
+    device_id?: number;
+    name?: string;
+    picture?: string;
+    [key: string]: any;
+}
+
+/** Badge / user information */
+export interface IBadge {
+    id_badge?: string | number;
+    name?: string;
+    alias?: string;
+    code?: string;
+    [key: string]: any;
+}
+
+/** Event history entry (evenement) */
+export interface IEvenement {
+    id_evenement?: number;
+    option_id?: number;
+    device?: string;
+    message?: string;
+    picture?: string;
+    date?: number;
+    status?: number;
+    badge?: number;
+    [key: string]: any;
 }
 
 /**
