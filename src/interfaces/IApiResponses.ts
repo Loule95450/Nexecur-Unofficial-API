@@ -138,8 +138,11 @@ export interface IPanelCheckResponse extends IApiResponse {
 
 /**
  * Response interface for stream (camera) requests
- * The actual payload can vary; keep it open for now.
  */
 export interface IStreamResponse extends IApiResponse {
+    /** Stream URI (rtsp) returned by the API */
+    uri: string;
+
+    /** Allow other optional fields returned by the API */
     [key: string]: any;
 }
