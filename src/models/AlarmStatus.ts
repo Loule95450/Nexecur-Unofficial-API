@@ -5,8 +5,14 @@ export enum AlarmStatus {
     /** Alarm system is disabled/disarmed */
     Disabled = 0,
     
-    /** Alarm system is enabled/armed */
-    Enabled = 1
+    /** Alarm system is partially enabled/armed (SP1) */
+    PartialAlarm = 1,
+    
+    /** Alarm system is fully enabled/armed (SP2) */
+    TotalAlarm = 2,
+    
+    /** @deprecated Use TotalAlarm instead. Backward compatibility alias for fully enabled alarm */
+    Enabled = 2
 }
 
 /**
@@ -27,8 +33,11 @@ export function alarmStatusToString(status: AlarmStatus): string {
     switch (status) {
         case AlarmStatus.Disabled:
             return 'Disabled';
-        case AlarmStatus.Enabled:
-            return 'Enabled';
+        case AlarmStatus.PartialAlarm:
+            return 'Partial Alarm (SP1)';
+        case AlarmStatus.TotalAlarm:
+        case AlarmStatus.Enabled: // Handle deprecated alias
+            return 'Total Alarm (SP2)';
         default:
             return 'Unknown';
     }

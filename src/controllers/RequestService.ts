@@ -165,7 +165,8 @@ export class RequestService {
 
         // Add alarm command if specified
         if (alarmCommand !== -1) {
-            console.log(`${alarmCommand === 1 ? 'Arming' : 'Disarming'} alarm system`);
+            const action = alarmCommand === 0 ? 'Disarming' : alarmCommand === 1 ? 'Arming (Partial - SP1)' : 'Arming (Total - SP2)';
+            console.log(`${action} alarm system`);
             requestOptions.json = {
                 status: alarmCommand
             };
