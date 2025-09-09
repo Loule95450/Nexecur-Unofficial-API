@@ -28,87 +28,87 @@ export interface ISiteResponse extends IApiResponse {
     token: string;
 
     /** Site identifier */
-    id_site?: number;
+    id_site: number;
 
     /** Site type (eg. "centrale_w") */
-    type?: string;
+    type: string;
 
     /** Ecosystem name */
-    ecosystem?: string;
+    ecosystem: string;
 
     /** Streaming enabled on panel (1/0) */
-    panel_streaming?: number;
+    panel_streaming: number;
 
     /** Panel serial number */
-    panel_serial?: string;
+    panel_serial: string;
 
     /** Current alarm panel status */
-    panel_status?: number;
+    panel_status: number;
 
     /** Panel service/partition flags */
-    panel_sp1?: number;
-    panel_sp2?: number;
-    panel_sp1_nom?: string;
-    panel_sp2_nom?: string;
+    panel_sp1: number;
+    panel_sp2: number;
+    panel_sp1_nom: string;
+    panel_sp2_nom: string;
 
     /** List of service identifiers enabled for the site */
-    services?: number[];
+    services: number[];
 
     /** Registered devices (sensors, zones, etc.) */
-    devices?: IDevice[];
+    devices: IDevice[];
 
     /** Registered badges/users */
-    badges?: IBadge[];
+    badges: IBadge[];
 
     /** Event history data */
-    evenements?: IEvenement[];
+    evenements: IEvenement[];
 
     /** Locks (serrures) */
-    serrures?: any[];
+    serrures: any[]; // Make PR if you have a proper interface for this
 
     /** Camera / streaming related fields */
-    camera_token?: string;
-    camera_available?: number;
+    camera_token: string;
+    camera_available: number;
 
     /** Various availability flags */
-    panel_available?: number;
-    streaming_available?: number;
-    serrures_available?: number;
-    looky_available?: number;
+    panel_available: number;
+    streaming_available: number;
+    serrures_available: number;
+    looky_available: number;
 
     /** Cameras and shares */
-    cameras?: any[];
-    partages?: any[];
+    cameras: any[]; // Make PR if you have a proper interface for this
+    partages: any[]; // Make PR if you have a proper interface for this
 }
 
 /** Device / zone information returned by the site API */
 export interface IDevice {
-    serial?: string;
-    device_id?: number;
-    name?: string;
-    picture?: string;
+    serial: string;
+    device_id: number;
+    name: string;
+    picture: string;
     [key: string]: any;
 }
 
 /** Badge / user information */
 export interface IBadge {
-    id_badge?: string | number;
-    name?: string;
-    alias?: string;
-    code?: string;
+    id_badge: string | number;
+    name: string;
+    alias: string;
+    code: string;
     [key: string]: any;
 }
 
 /** Event history entry (evenement) */
 export interface IEvenement {
-    id_evenement?: number;
-    option_id?: number;
-    device?: string;
-    message?: string;
-    picture?: string;
-    date?: number;
-    status?: number;
-    badge?: number;
+    id_evenement: number;
+    option_id: number;
+    device: string;
+    message: string;
+    picture: string;
+    date: number;
+    status: number;
+    badge: number;
     [key: string]: any;
 }
 
@@ -134,4 +134,12 @@ export interface IPanelStatusResponse extends IApiResponse {
 export interface IPanelCheckResponse extends IApiResponse {
     /** Whether the operation is still pending (1 = pending, 0 = completed) */
     still_pending: number;
+}
+
+/**
+ * Response interface for stream (camera) requests
+ * The actual payload can vary; keep it open for now.
+ */
+export interface IStreamResponse extends IApiResponse {
+    [key: string]: any;
 }

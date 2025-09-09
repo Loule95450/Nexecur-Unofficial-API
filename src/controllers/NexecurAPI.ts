@@ -29,6 +29,31 @@ export class NexecurAPI {
     }
 
     /**
+     * Requests stream data for a specified device serial and returns raw response
+     * @param deviceSerial - Serial from site devices
+     */
+    public static async getStream(deviceSerial: string): Promise<any> {
+        const userConfig = NexecurAPI.getUserConfiguration();
+        NexecurAPI.validateConfiguration(userConfig);
+
+        await NexecurAPI.ensureDeviceRegistration(userConfig);
+
+        try {
+            const streamResponse = await RequestService.getStream(userConfig, deviceSerial);
+            if (streamResponse.message !== 'OK' && streamResponse.status !== 0) {
+                throw new UndefinedApiError('Failed to retrieve stream data from API');
+            }
+
+            return streamResponse;
+        } catch (error) {
+            if (error instanceof UndefinedApiError) {
+                throw error;
+            }
+            throw new UndefinedApiError(`Failed to get stream data: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    }
+
+    /**
      * Validates user configuration and ensures required fields are present
      * @param userConfig - User configuration to validate
      * @throws Error if configuration is invalid
