@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { NexecurAPI } from '../src/controllers/NexecurAPI';
 import { UserConfiguration } from '../src/models/UserConfiguration';
-import { AlarmStatus } from '../src/models/AlarmStatus';
+import { AlarmStatus, alarmStatusToString, isValidAlarmStatus } from '../src/models/AlarmStatus';
 import { RequestService } from '../src/controllers/RequestService';
 import { 
     OrderAlarmError,
@@ -271,7 +271,7 @@ describe('NexecurAPI', () => {
                 expect.fail('Should have thrown OrderAlarmError');
             } catch (error) {
                 expect(error).to.be.instanceOf(OrderAlarmError);
-                expect(error.message).to.include('enabling alarm');
+                expect(error.message).to.include('enabling total alarm');
             } finally {
                 RequestService.controlPanelStatus = originalControl;
             }
@@ -310,6 +310,103 @@ describe('NexecurAPI', () => {
             } finally {
                 RequestService.controlPanelStatus = originalControl;
             }
+        });
+    });
+
+    describe('enablePartialAlarm', () => {
+        it('should enable partial alarm successfully', async () => {
+            // Mock required methods
+            const originalControl = RequestService.controlPanelStatus;
+            RequestService.controlPanelStatus = async () => mockResponses.panelStatusSuccess;
+
+            try {
+                await NexecurAPI.enablePartialAlarm();
+                // If no error is thrown, the test passes
+            } finally {
+                RequestService.controlPanelStatus = originalControl;
+            }
+        });
+
+        it('should throw OrderAlarmError when operation fails', async () => {
+            // Mock control method to return error
+            const originalControl = RequestService.controlPanelStatus;
+            RequestService.controlPanelStatus = async () => ({
+                message: 'ERROR',
+                status: 1,
+                pending: 0
+            });
+
+            try {
+                await NexecurAPI.enablePartialAlarm();
+                expect.fail('Should have thrown OrderAlarmError');
+            } catch (error) {
+                expect(error).to.be.instanceOf(OrderAlarmError);
+                expect(error.message).to.include('enabling partial alarm');
+            } finally {
+                RequestService.controlPanelStatus = originalControl;
+            }
+        });
+    });
+
+    describe('enableTotalAlarm', () => {
+        it('should enable total alarm successfully', async () => {
+            // Mock required methods
+            const originalControl = RequestService.controlPanelStatus;
+            RequestService.controlPanelStatus = async () => mockResponses.panelStatusSuccess;
+
+            try {
+                await NexecurAPI.enableTotalAlarm();
+                // If no error is thrown, the test passes
+            } finally {
+                RequestService.controlPanelStatus = originalControl;
+            }
+        });
+
+        it('should throw OrderAlarmError when operation fails', async () => {
+            // Mock control method to return error
+            const originalControl = RequestService.controlPanelStatus;
+            RequestService.controlPanelStatus = async () => ({
+                message: 'ERROR',
+                status: 1,
+                pending: 0
+            });
+
+            try {
+                await NexecurAPI.enableTotalAlarm();
+                expect.fail('Should have thrown OrderAlarmError');
+            } catch (error) {
+                expect(error).to.be.instanceOf(OrderAlarmError);
+                expect(error.message).to.include('enabling total alarm');
+            } finally {
+                RequestService.controlPanelStatus = originalControl;
+            }
+        });
+    });
+
+    describe('AlarmStatus enum and helpers', () => {
+        it('should have correct enum values', () => {
+            expect(AlarmStatus.Disabled).to.equal(0);
+            expect(AlarmStatus.PartialAlarm).to.equal(1);
+            expect(AlarmStatus.TotalAlarm).to.equal(2);
+            expect(AlarmStatus.Enabled).to.equal(2); // Backward compatibility
+        });
+
+        it('should convert alarm status to string correctly', () => {
+            expect(alarmStatusToString(AlarmStatus.Disabled)).to.equal('Disabled');
+            expect(alarmStatusToString(AlarmStatus.PartialAlarm)).to.equal('Partial Alarm (SP1)');
+            expect(alarmStatusToString(AlarmStatus.TotalAlarm)).to.equal('Total Alarm (SP2)');
+            expect(alarmStatusToString(AlarmStatus.Enabled)).to.equal('Total Alarm (SP2)');
+            expect(alarmStatusToString(999 as AlarmStatus)).to.equal('Unknown');
+        });
+
+        it('should validate alarm status correctly', () => {
+            expect(isValidAlarmStatus(0)).to.be.true;
+            expect(isValidAlarmStatus(1)).to.be.true;
+            expect(isValidAlarmStatus(2)).to.be.true;
+            expect(isValidAlarmStatus(3)).to.be.false;
+            expect(isValidAlarmStatus('0')).to.be.false;
+            expect(isValidAlarmStatus(null)).to.be.false;
+            expect(isValidAlarmStatus(undefined)).to.be.false;
         });
     });
 

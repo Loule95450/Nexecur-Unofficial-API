@@ -140,7 +140,7 @@ export class NexecurAPI {
             const statusResponse = await RequestService.controlPanelStatus(userConfig, alarmCommand);
             
             if (statusResponse.message !== 'OK' || statusResponse.status !== 0) {
-                const action = alarmCommand === 1 ? 'enabling' : 'disabling';
+                const action = alarmCommand === 0 ? 'disabling' : alarmCommand === 1 ? 'enabling partial' : 'enabling total';
                 throw new OrderAlarmError(`Error while ${action} alarm system`);
             }
 
@@ -156,17 +156,34 @@ export class NexecurAPI {
             if (error instanceof OrderAlarmError) {
                 throw error;
             }
-            const action = alarmCommand === 1 ? 'enabling' : 'disabling';
+            const action = alarmCommand === 0 ? 'disabling' : alarmCommand === 1 ? 'enabling partial' : 'enabling total';
             throw new OrderAlarmError(`Failed ${action} alarm: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
 
     /**
-     * Enables the alarm system
+     * Enables the alarm system in partial mode (SP1)
+     * @returns Promise that resolves when partial alarm is enabled
+     */
+    public static async enablePartialAlarm(): Promise<void> {
+        return NexecurAPI.controlAlarmSystem(1);
+    }
+
+    /**
+     * Enables the alarm system in total mode (SP2)
+     * @returns Promise that resolves when total alarm is enabled
+     */
+    public static async enableTotalAlarm(): Promise<void> {
+        return NexecurAPI.controlAlarmSystem(2);
+    }
+
+    /**
+     * Enables the alarm system (defaults to total alarm for backward compatibility)
+     * @deprecated Use enablePartialAlarm() or enableTotalAlarm() for explicit control
      * @returns Promise that resolves when alarm is enabled
      */
     public static async enableAlarm(): Promise<void> {
-        return NexecurAPI.controlAlarmSystem(1);
+        return NexecurAPI.controlAlarmSystem(2); // Default to total alarm
     }
 
     /**
