@@ -22,10 +22,44 @@ const mockResponses = {
         message: 'OK',
         status: 0,
         token: 'test-token-123',
+        id_site: 12345,
+        type: 'centrale_w',
+        ecosystem: 'test_ecosystem',
+        panel_streaming: 1,
+        panel_serial: 'PANEL123456',
         panel_status: AlarmStatus.Disabled,
+        panel_sp1: 0,
+        panel_sp2: 0,
+        panel_sp1_nom: 'SP1',
+        panel_sp2_nom: 'SP2',
+        services: [1, 2, 3],
+        devices: [
+            { serial: 'DEV123', device_id: 1, name: 'Test Device', picture: '' }
+        ],
+        badges: [
+            { id_badge: 1, name: 'Test Badge', alias: 'badge1', code: '1234' }
+        ],
         evenements: [
-            { timestamp: '2023-01-01T10:00:00Z', type: 'alarm_disabled' }
-        ]
+            { 
+                id_evenement: 1,
+                option_id: 1,
+                device: 'DEV123',
+                message: 'alarm_disabled',
+                picture: '',
+                date: 1672574400,
+                status: 0,
+                badge: 1
+            }
+        ],
+        serrures: [],
+        camera_token: 'camera-token-123',
+        camera_available: 1,
+        panel_available: 1,
+        streaming_available: 1,
+        serrures_available: 0,
+        looky_available: 0,
+        cameras: [],
+        partages: []
     },
     registerSuccess: {
         message: '',
@@ -41,8 +75,50 @@ const mockResponses = {
         message: 'OK',
         status: 0,
         still_pending: 0
+    },
+    streamSuccess: {
+        message: 'OK',
+        status: 0,
+        uri: 'rtsp://stream.example.com:554/test/stream'
+    },
+    streamError: {
+        message: 'ERROR',
+        status: 1,
+        uri: ''
     }
 };
+
+/**
+ * Helper function to create a complete site error response
+ */
+const createSiteErrorResponse = (message = 'ERROR', status = 1) => ({
+    message,
+    status,
+    token: '',
+    id_site: 0,
+    type: '',
+    ecosystem: '',
+    panel_streaming: 0,
+    panel_serial: '',
+    panel_status: 0,
+    panel_sp1: 0,
+    panel_sp2: 0,
+    panel_sp1_nom: '',
+    panel_sp2_nom: '',
+    services: [],
+    devices: [],
+    badges: [],
+    evenements: [],
+    serrures: [],
+    camera_token: '',
+    camera_available: 0,
+    panel_available: 0,
+    streaming_available: 0,
+    serrures_available: 0,
+    looky_available: 0,
+    cameras: [],
+    partages: []
+});
 
 /**
  * Test configuration
@@ -84,13 +160,7 @@ describe('NexecurAPI', () => {
         it('should throw UndefinedApiError when API returns error', async () => {
             // Mock the authenticateWithSite method to return error
             const originalAuth = RequestService.authenticateWithSite;
-            RequestService.authenticateWithSite = async () => ({
-                message: 'ERROR',
-                status: 1,
-                token: '',
-                panel_status: 0,
-                evenements: []
-            });
+            RequestService.authenticateWithSite = async () => createSiteErrorResponse();
 
             try {
                 await NexecurAPI.getAlarmStatus();
@@ -129,7 +199,7 @@ describe('NexecurAPI', () => {
                 const events = await NexecurAPI.getEventHistory();
                 expect(events).to.be.an('array');
                 expect(events).to.have.length(1);
-                expect(events[0]).to.have.property('timestamp');
+                expect(events[0]).to.have.property('date');
             } finally {
                 RequestService.authenticateWithSite = originalAuth;
             }
@@ -272,6 +342,176 @@ describe('NexecurAPI', () => {
                 RequestService.getSalt = originalSalt;
                 RequestService.authenticateWithSite = originalAuth;
                 RequestService.registerDevice = originalRegister;
+            }
+        });
+    });
+
+    describe('getStream', () => {
+        it('should return stream response successfully', async () => {
+            // Mock required methods for device registration and stream request
+            const originalSalt = RequestService.getSalt;
+            const originalAuth = RequestService.authenticateWithSite;
+            const originalRegister = RequestService.registerDevice;
+            const originalGetStream = RequestService.getStream;
+
+            RequestService.getSalt = async () => mockResponses.saltSuccess;
+            RequestService.authenticateWithSite = async () => mockResponses.siteSuccess;
+            RequestService.registerDevice = async () => mockResponses.registerSuccess;
+            RequestService.getStream = async () => mockResponses.streamSuccess;
+
+            try {
+                const streamResponse = await NexecurAPI.getStream('DEV123');
+                expect(streamResponse).to.be.an('object');
+                expect(streamResponse).to.have.property('uri');
+                expect(streamResponse.uri).to.equal('rtsp://stream.example.com:554/test/stream');
+                expect(streamResponse.message).to.equal('OK');
+                expect(streamResponse.status).to.equal(0);
+            } finally {
+                RequestService.getSalt = originalSalt;
+                RequestService.authenticateWithSite = originalAuth;
+                RequestService.registerDevice = originalRegister;
+                RequestService.getStream = originalGetStream;
+            }
+        });
+
+        it('should throw UndefinedApiError when API returns error status', async () => {
+            // Mock required methods with stream error response
+            const originalSalt = RequestService.getSalt;
+            const originalAuth = RequestService.authenticateWithSite;
+            const originalRegister = RequestService.registerDevice;
+            const originalGetStream = RequestService.getStream;
+
+            RequestService.getSalt = async () => mockResponses.saltSuccess;
+            RequestService.authenticateWithSite = async () => mockResponses.siteSuccess;
+            RequestService.registerDevice = async () => mockResponses.registerSuccess;
+            RequestService.getStream = async () => mockResponses.streamError;
+
+            try {
+                await NexecurAPI.getStream('DEV123');
+                expect.fail('Should have thrown UndefinedApiError');
+            } catch (error) {
+                expect(error).to.be.instanceOf(UndefinedApiError);
+                expect(error.message).to.include('Failed to retrieve stream data from API');
+            } finally {
+                RequestService.getSalt = originalSalt;
+                RequestService.authenticateWithSite = originalAuth;
+                RequestService.registerDevice = originalRegister;
+                RequestService.getStream = originalGetStream;
+            }
+        });
+
+        it('should throw UndefinedApiError when API returns non-OK message', async () => {
+            // Mock required methods with stream response having non-OK message
+            const originalSalt = RequestService.getSalt;
+            const originalAuth = RequestService.authenticateWithSite;
+            const originalRegister = RequestService.registerDevice;
+            const originalGetStream = RequestService.getStream;
+
+            RequestService.getSalt = async () => mockResponses.saltSuccess;
+            RequestService.authenticateWithSite = async () => mockResponses.siteSuccess;
+            RequestService.registerDevice = async () => mockResponses.registerSuccess;
+            RequestService.getStream = async () => ({
+                message: 'DEVICE_NOT_FOUND',
+                status: 1, // Non-zero status to trigger error
+                uri: ''
+            });
+
+            try {
+                await NexecurAPI.getStream('INVALID_DEVICE');
+                expect.fail('Should have thrown UndefinedApiError');
+            } catch (error) {
+                expect(error).to.be.instanceOf(UndefinedApiError);
+                expect(error.message).to.include('Failed to retrieve stream data from API');
+            } finally {
+                RequestService.getSalt = originalSalt;
+                RequestService.authenticateWithSite = originalAuth;
+                RequestService.registerDevice = originalRegister;
+                RequestService.getStream = originalGetStream;
+            }
+        });
+
+        it('should handle network or request errors', async () => {
+            // Mock required methods with network error for stream request
+            const originalSalt = RequestService.getSalt;
+            const originalAuth = RequestService.authenticateWithSite;
+            const originalRegister = RequestService.registerDevice;
+            const originalGetStream = RequestService.getStream;
+
+            RequestService.getSalt = async () => mockResponses.saltSuccess;
+            RequestService.authenticateWithSite = async () => mockResponses.siteSuccess;
+            RequestService.registerDevice = async () => mockResponses.registerSuccess;
+            RequestService.getStream = async () => {
+                throw new Error('Network timeout');
+            };
+
+            try {
+                await NexecurAPI.getStream('DEV123');
+                expect.fail('Should have thrown UndefinedApiError');
+            } catch (error) {
+                expect(error).to.be.instanceOf(UndefinedApiError);
+                expect(error.message).to.include('Failed to get stream data');
+                expect(error.message).to.include('Network timeout');
+            } finally {
+                RequestService.getSalt = originalSalt;
+                RequestService.authenticateWithSite = originalAuth;
+                RequestService.registerDevice = originalRegister;
+                RequestService.getStream = originalGetStream;
+            }
+        });
+
+        it('should handle device registration flow when not registered', async () => {
+            // Set up unregistered configuration
+            const unregisteredConfig = new UserConfiguration({
+                token: '', // No token means not registered
+                idSite: 'test-site',
+                password: 'test-password',
+                idDevice: '',
+                pin: '',
+                deviceName: 'Test Device'
+            });
+            NexecurAPI.setUserConfiguration(unregisteredConfig);
+
+            // Mock all required methods for registration flow
+            const originalSalt = RequestService.getSalt;
+            const originalAuth = RequestService.authenticateWithSite;
+            const originalRegister = RequestService.registerDevice;
+            const originalGetStream = RequestService.getStream;
+
+            RequestService.getSalt = async () => mockResponses.saltSuccess;
+            RequestService.authenticateWithSite = async () => mockResponses.siteSuccess;
+            RequestService.registerDevice = async () => mockResponses.registerSuccess;
+            RequestService.getStream = async () => mockResponses.streamSuccess;
+
+            try {
+                const streamResponse = await NexecurAPI.getStream('DEV123');
+                expect(streamResponse).to.be.an('object');
+                expect(streamResponse.uri).to.equal('rtsp://stream.example.com:554/test/stream');
+            } finally {
+                RequestService.getSalt = originalSalt;
+                RequestService.authenticateWithSite = originalAuth;
+                RequestService.registerDevice = originalRegister;
+                RequestService.getStream = originalGetStream;
+            }
+        });
+
+        it('should handle invalid configuration', async () => {
+            // Set up invalid configuration
+            const invalidConfig = new UserConfiguration({
+                token: '',
+                idSite: '', // Missing required field
+                password: 'test-password',
+                idDevice: '',
+                pin: '',
+                deviceName: 'Test Device'
+            });
+            NexecurAPI.setUserConfiguration(invalidConfig);
+
+            try {
+                await NexecurAPI.getStream('DEV123');
+                expect.fail('Should have thrown error for invalid configuration');
+            } catch (error) {
+                expect(error.message).to.include('Invalid configuration');
+                expect(error.message).to.include('id_site and password are required');
             }
         });
     });
