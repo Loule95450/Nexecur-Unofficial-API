@@ -33,7 +33,7 @@
     "@types/mocha": "^5.2.5",
     "@types/request": "^2.48.13",
     "chai": "^4.5.0",
-    "mocha": "^5.2.0",
+    "mocha": "^11.7.2",
     "rimraf": "^2.7.1",
     "ts-node": "^8.10.2"
   },
