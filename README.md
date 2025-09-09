@@ -6,16 +6,7 @@
 
 A modern, fully-typed TypeScript API for interacting with the Nexecur alarm system. This is an unofficial API that provides a clean, well-documented interface for controlling and monitoring your Nexecur security system.
 
-This project is a complete refactor and modernization of the original codebase, featuring improved code structure, comprehensive testing, and robust error handling.
-
-## Features
-
-- **🔒 Full TypeScript Support**: Complete type safety with comprehensive interfaces and type definitions
-- **🧪 Comprehensive Testing**: Extensive test suite with mocking for reliable development
-- **📚 Well Documented**: JSDoc comments throughout with clear API documentation
-- **🛡️ Robust Error Handling**: Custom error classes with detailed error information
-- **🏗️ Modern Architecture**: Clean separation of concerns with modular design
-- **⚡ Promise-based API**: Modern async/await support for all operations
+This project is a complete refactor and modernization of the original codebase of [Baudev](https://github.com/Baudev), featuring improved code structure, comprehensive testing, and robust error handling.
 
 ## Installation
 
@@ -218,15 +209,6 @@ tests/                # Test files
 dist/                 # Compiled JavaScript output
 ```
 
-### Code Quality
-
-The project follows strict TypeScript configuration with:
-- Full type checking enabled
-- Comprehensive error handling
-- JSDoc documentation for all public APIs
-- Consistent code formatting and naming conventions
-- Extensive test coverage
-
 ## Contributing
 
 1. Fork the repository
@@ -242,7 +224,7 @@ The project follows strict TypeScript configuration with:
 
 MIT License
 
-Copyright (c) 2018 Baudev, Quelqundev, Loule95450.
+Copyright (c) 2025 Loule95450.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -265,16 +247,3 @@ SOFTWARE.
 ## Legal Disclaimer
 
 This code is in no way affiliated with, authorized, maintained, sponsored or endorsed by Nexecur or any of its affiliates or subsidiaries. This is an independent and unofficial API. Use at your own risk.
-
-## Changelog
-
-### Version 1.0.0 (Latest)
-- ✨ Complete TypeScript rewrite with full type safety
-- 🏗️ Modernized project structure with proper separation of concerns
-- 🧪 Comprehensive test suite with mocking and edge case coverage
-- 📚 Complete JSDoc documentation for all public APIs
-- 🛡️ Robust error handling with custom error classes
-- ⚡ Promise-based API with async/await support
-- 🔧 Improved configuration management
-- 📦 Better packaging with proper TypeScript declaration files
-- 🎯 Enhanced code readability and maintainability
