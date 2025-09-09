@@ -143,6 +143,12 @@ Disarms the alarm system. Waits for confirmation that the operation completed.
 #### `NexecurAPI.getEventHistory(): Promise<any[]>`
 Retrieves the recent event history from the alarm system.
 
+#### `NexecurAPI.getStream(deviceSerial: string): Promise<any>`
+Requests stream (camera) data for a device identified by its `serial` field as returned in `devices` from the site payload.
+ - Input: `deviceSerial` - the `serial` string from a device entry.
+ - Output: raw API response (varies by camera/stream type). The library exposes the loose `IStreamResponse` interface to represent this payload.
+ - Note: The CLI (see below) can save the stream response into `site-output.json` under the `stream` key, indexed by the device serial.
+
 ### Types and Enums
 
 #### `AlarmStatus`

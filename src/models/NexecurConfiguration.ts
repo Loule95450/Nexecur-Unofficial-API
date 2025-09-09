@@ -27,6 +27,9 @@ export class NexecurConfiguration {
     
     /** API endpoint for checking panel status */
     public static readonly PANEL_CHECK_STATUS_URI = '/webservices/check-panel-status';
+
+    /** API endpoint for streaming (camera) */
+    public static readonly STREAM_URI = '/webservices/stream';
     
     /** Maximum seconds to wait for alarm activation/deactivation */
     public static readonly MAX_WAIT_SECONDS_FOR_ALARM_OPERATION = 60;

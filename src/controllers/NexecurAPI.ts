@@ -10,6 +10,7 @@ import {
     OrderAlarmError, 
     UndefinedApiError 
 } from '../models/errors/NexecurErrors';
+import { IEvenement, IStreamResponse } from '../interfaces/IApiResponses';
 
 /**
  * Main API class for interacting with the Nexecur alarm system
@@ -26,6 +27,31 @@ export class NexecurAPI {
             NexecurAPI.userConfiguration = NexecurConfiguration.loadUserConfiguration();
         }
         return NexecurAPI.userConfiguration;
+    }
+
+    /**
+     * Requests stream data for a specified device serial and returns raw response
+     * @param deviceSerial - Serial from site devices
+     */
+    public static async getStream(deviceSerial: string): Promise<IStreamResponse> {
+        const userConfig = NexecurAPI.getUserConfiguration();
+        NexecurAPI.validateConfiguration(userConfig);
+
+        await NexecurAPI.ensureDeviceRegistration(userConfig);
+
+        try {
+            const streamResponse = await RequestService.getStream(userConfig, deviceSerial);
+            if (streamResponse.message !== 'OK' && streamResponse.status !== 0) {
+                throw new UndefinedApiError('Failed to retrieve stream data from API');
+            }
+
+            return streamResponse;
+        } catch (error) {
+            if (error instanceof UndefinedApiError) {
+                throw error;
+            }
+            throw new UndefinedApiError(`Failed to get stream data: ${error instanceof Error ? error.message : String(error)}`);
+        }
     }
 
     /**
@@ -182,7 +208,7 @@ export class NexecurAPI {
      * Gets the alarm system event history
      * @returns Promise with event history array
      */
-    public static async getEventHistory(): Promise<any[]> {
+    public static async getEventHistory(): Promise<IEvenement[]> {
         const userConfig = NexecurAPI.getUserConfiguration();
         NexecurAPI.validateConfiguration(userConfig);
         

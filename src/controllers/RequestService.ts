@@ -9,7 +9,8 @@ import {
     ISiteResponse, 
     IRegisterResponse, 
     IPanelStatusResponse, 
-    IPanelCheckResponse 
+    IPanelCheckResponse,
+    IStreamResponse
 } from '../interfaces/IApiResponses';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
 
@@ -215,5 +216,26 @@ export class RequestService {
         throw new StillPendingError(
             `The alarm operation did not complete within ${maxWaitSeconds} seconds after ${attemptCount} attempts.`
         );
+    }
+
+    /**
+     * Requests a stream (camera) data for a given device serial
+     * @param userConfig - User configuration with valid token
+     * @param deviceSerial - Device serial as provided in site devices
+     * @returns Promise with stream response
+     */
+    public static async getStream(userConfig: UserConfiguration, deviceSerial: string): Promise<IStreamResponse> {
+        const requestOptions: IRequestOptions = {
+            url: NexecurConfiguration.BASE_URL + NexecurConfiguration.STREAM_URI,
+            headers: {
+                ...RequestService.DEFAULT_HEADERS,
+                'X-Auth-Token': userConfig.token
+            },
+            json: {
+                serial: deviceSerial
+            }
+        };
+
+        return RequestService.makePostRequest<IStreamResponse>(requestOptions);
     }
 }

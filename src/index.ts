@@ -30,7 +30,8 @@ export {
     ISiteResponse, 
     IRegisterResponse, 
     IPanelStatusResponse, 
-    IPanelCheckResponse 
+    IPanelCheckResponse,
+    IStreamResponse
 } from './interfaces/IApiResponses';
 
 // Utilities
