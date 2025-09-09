@@ -1,1 +1,8 @@
-{"token":"","id_site":"","password":"","id_device":"","pin":"","deviceName":""}
+{
+  "token": "",
+  "id_site": "test-site",
+  "password": "aauG7H7rUCy0AxYD2tqW+yVaAA+1OIdmtJNKs7EhKM8=",
+  "id_device": "device-123",
+  "pin": "DmTC8L8WFg528LD9s7L10IgZfG4=",
+  "deviceName": "Test Device"
+}

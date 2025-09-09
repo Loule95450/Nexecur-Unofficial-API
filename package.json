@@ -1,22 +1,50 @@
 {
   "name": "nexecur-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Unofficial TypeScript API for the Nexecur alarm system",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "install": "tsc -p tsconfig.json",
-    "test": "mocha"
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf dist",
+    "dev": "ts-node src/index.ts",
+    "test": "mocha tests/**/*.ts --require ts-node/register --timeout 10000 --project tsconfig.test.json",
+    "test:watch": "npm run test -- --watch",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "prebuild": "npm run clean",
+    "prepare": "npm run build"
   },
+  "keywords": [
+    "nexecur",
+    "alarm",
+    "security",
+    "api",
+    "typescript"
+  ],
   "dependencies": {
     "@types/node": "^10.11.4",
     "request": "^2.88.0",
-    "typescript": "^3.1.1",
-    "crypto": "^1.0.1"
+    "typescript": "^3.1.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.20",
+    "@types/mocha": "^5.2.5",
+    "@types/request": "^2.48.13",
+    "chai": "^4.5.0",
+    "mocha": "^5.2.0",
+    "rimraf": "^2.7.1",
+    "ts-node": "^8.10.2"
   },
   "author": "Baudev & Quelqun007",
   "license": "MIT",
-  "devDependencies": {
-    "mocha": "^5.2.0",
-    "@types/mocha": "^5.2.5"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Loule95450/Nexecur-Unofficial-API.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Loule95450/Nexecur-Unofficial-API/issues"
+  },
+  "homepage": "https://github.com/Loule95450/Nexecur-Unofficial-API#readme"
 }
