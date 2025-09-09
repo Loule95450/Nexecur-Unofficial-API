@@ -183,7 +183,7 @@ export class NexecurAPI {
      * @returns Promise that resolves when alarm is enabled
      */
     public static async enableAlarm(): Promise<void> {
-        return NexecurAPI.controlAlarmSystem(2); // Default to total alarm
+        return NexecurAPI.controlAlarmSystem(1); // Default to partial alarm
     }
 
     /**
