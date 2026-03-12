@@ -14,9 +14,9 @@ export interface IHikvisionConfig {
     phone?: string;
     email?: string;
     password: string;
-    countryCode: string;
-    ssid: string;
-    deviceName: string;
+    countryCode?: string;
+    ssid?: string;
+    deviceName?: string;
 }
 
 export interface IHikvisionDevice {
@@ -67,7 +67,7 @@ export class HikvisionClient {
 
     constructor(config: IHikvisionConfig) {
         this.password = config.password;
-        this.ssid = config.ssid;
+        this.ssid = config.ssid || '';
         this.countryCode = config.countryCode || '33';
         
         // Format account (phone or email)
