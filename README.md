@@ -43,7 +43,7 @@ The `token` and `id_device` fields are automatically populated during device reg
 
 ## Usage
 
-### Basic Example
+### Videofied Version (Original API)
 
 ```typescript
 import { NexecurAPI, AlarmStatus } from 'nexecur-api';
@@ -54,9 +54,13 @@ async function main() {
     const status = await NexecurAPI.getAlarmStatus();
     console.log(`Alarm is currently: ${status === AlarmStatus.Enabled ? 'Armed' : 'Disarmed'}`);
     
-    // Enable the alarm
-    await NexecurAPI.enableAlarm();
-    console.log('Alarm has been armed');
+    // Enable the alarm (partial/home mode)
+    await NexecurAPI.enablePartialAlarm();
+    console.log('Alarm has been armed (partial)');
+    
+    // Or enable in total/away mode
+    await NexecurAPI.enableTotalAlarm();
+    console.log('Alarm has been armed (total)');
     
     // Get event history
     const events = await NexecurAPI.getEventHistory();
@@ -69,6 +73,73 @@ async function main() {
 
 main();
 ```
+
+### Hikvision Version (New API - GuardingVision Cloud)
+
+```typescript
+import { HikvisionClient, AlarmVersion } from 'nexecur-api';
+
+async function main() {
+  // Create Hikvision client
+  const client = new HikvisionClient({
+    phone: '0612345678',    // Or use email: 'user@example.com'
+    password: 'your-cloud-password',
+    countryCode: '33',       // France
+    ssid: 'YourWiFiNetwork',
+    deviceName: 'My API Device'
+  });
+  
+  try {
+    // Login to the cloud
+    await client.login();
+    
+    // Get alarm status
+    const status = await client.getStatus();
+    console.log(`Alarm status: ${status.status}`);
+    
+    // Arm in stay/home mode
+    await client.setArmedHome();
+    
+    // Arm in away mode  
+    await client.setArmedAway();
+    
+    // Disarm
+    await client.disarm();
+    
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
+
+main();
+```
+
+### Unified Client (Supports Both Versions)
+
+```typescript
+import { NexecurAlarmClient, AlarmVersion } from 'nexecur-api';
+
+// For Videofied (original)
+const alarm = new NexecurAlarmClient({
+  version: AlarmVersion.VIDEOFIED,
+  idSite: 'your-site-id',
+  password: 'your-pin'
+});
+
+// Or for Hikvision (new)
+const alarm2 = new NexecurAlarmClient({
+  version: AlarmVersion.HIKVISION,
+  phone: '0612345678',
+  password: 'cloud-password',
+  countryCode: '33',
+  ssid: 'WiFiName'
+});
+
+// Same API for both
+await alarm.setArmedHome();
+await alarm.setArmedAway();
+await alarm.disarm();
+const status = await alarm.getStatus();
 
 ### Advanced Usage with Error Handling
 

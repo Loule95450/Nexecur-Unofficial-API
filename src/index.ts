@@ -3,8 +3,20 @@
  * Main entry point for the library
  */
 
-// Main API class
+// Main API class (Videofied version)
 export { NexecurAPI } from './controllers/NexecurAPI';
+
+// Hikvision client (new version via GuardingVision)
+export { HikvisionClient } from './controllers/HikvisionClient';
+
+// Unified alarm client (supports both versions)
+export { 
+    NexecurAlarmClient, 
+    AlarmVersion
+} from './NexecurAlarm';
+
+// Re-export AlarmConfig interface
+export type { AlarmConfig } from './NexecurAlarm';
 
 // Models and types
 export { AlarmStatus, alarmStatusToString, isValidAlarmStatus } from './models/AlarmStatus';

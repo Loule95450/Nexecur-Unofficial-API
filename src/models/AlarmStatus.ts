@@ -1,14 +1,19 @@
 /**
  * Enumeration of possible alarm system states
+ * 
+ * Note: Both Videofied and Hikvision use the same status values:
+ * - 0 = Disarmed
+ * - 1 = Armed Home/Stay (SP1 for Videofied)
+ * - 2 = Armed Away (SP2 for Videofied)
  */
 export enum AlarmStatus {
     /** Alarm system is disabled/disarmed */
     Disabled = 0,
     
-    /** Alarm system is partially enabled/armed (SP1) */
+    /** Alarm system is partially enabled/armed (SP1 for Videofied, Stay for Hikvision) */
     PartialAlarm = 1,
     
-    /** Alarm system is fully enabled/armed (SP2) */
+    /** Alarm system is fully enabled/armed (SP2 for Videofied, Away for Hikvision) */
     TotalAlarm = 2,
     
     /** @deprecated Use TotalAlarm instead. Backward compatibility alias for fully enabled alarm */
